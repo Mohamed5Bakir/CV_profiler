@@ -1,0 +1,137 @@
+﻿
+.dp {
+    border: 6px solid #eee;
+    transition: all 0.4s ease-in-out;
+}
+
+    .dp:hover {
+        border: 2px solid #eee;
+        transform: rotate(360deg) scale(0.9);
+        -ms-transform: rotate(360deg) scale(0.9);
+        -webkit-transform: rotate(360deg) scale(0.9);
+    }
+
+
+
+.dp-danger,.dp-danger:hover {
+    border-color: #d9534f;
+}
+
+
+.dp-success ,.dp-success:hover {
+    border-color: #5cb85c;
+}
+
+.dp-default ,.dp-default:hover{
+    border-color: #a0d160;
+}
+
+
+.dp-primary,.dp-primary:hover {
+    border-color: #f8f8f8;
+}
+
+.dp-info ,.dp-info:hover{
+    border-color: #5bc0de;
+}
+
+.dp-warning,.dp-warning:hover {
+    border-color: #f0ad4e;
+}
+
+
+
+
+.oaerror {
+  width: 90%; /* Configure it fit in your design  */
+  background-color: #FFFFFF; /* Default background */
+  padding: 20px;
+  border: 1px solid #eee;
+  border-left-width: 5px;
+  border-radius: 3px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+}
+
+.oaerror.danger {
+  border-left-color: #d9534f; /* Left side border color */
+  background-color: rgba(217, 83, 79, 0.1); /* Same color as the left border with reduced alpha to 0.1 */
+}
+
+.oaerror.danger strong ,.oaerror.danger .glyphicon{
+  color:  #d9534f;
+}
+
+.oaerror.warning {
+  border-left-color: #f0ad4e;
+  background-color: rgba(240, 173, 78, 0.1);
+}
+
+.oaerror.warning strong ,.oaerror.warning .glyphicon{
+  color: #f0ad4e;
+}
+
+.oaerror.info {
+  border-left-color: #5bc0de;
+  background-color: rgba(91, 192, 222, 0.1);
+}
+
+.oaerror.info strong ,.oaerror.info .glyphicon{
+  color: #5bc0de;
+}
+
+.oaerror.success {
+  border-left-color: #2b542c;
+  background-color: rgba(43, 84, 44, 0.1);
+}
+
+.oaerror.success strong ,.oaerror.success .glyphicon{
+  color: #2b542c;
+}
+
+
+.ns-close {
+	position: relative;
+    float:right;
+	cursor: pointer;
+}
+
+
+.ns-close:hover {
+	-webkit-transform: scale(1.2);
+	transform:scale(1.2);
+}
+
+
+
+
+@media ( max-width: 585px ) {
+    .input-group span.input-group-btn,.input-group input,.input-group button{
+        display: block;
+        width: 100%;
+        border-radius: 0;
+        margin: 0;
+    }
+    .input-group {
+        position: relative;   
+    }
+    .input-group span.data-up{
+        position: absolute;
+        top: 0;
+    }
+    .input-group span.data-dwn{
+        position: absolute;
+        bottom: 0;
+    }
+    .form-control.text-center {
+        margin: 34px 0;
+    }
+    .input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group{
+        margin-left:0;
+    }
+
+}
+
+
+
+

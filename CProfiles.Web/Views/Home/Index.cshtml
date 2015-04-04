@@ -1,0 +1,105 @@
+﻿@model CProfiles.Web.Models.ApplicationUser
+@{
+    ViewBag.Title = "Index";
+}
+<style>
+    .ui-state-highlight {
+        height: 10em;
+        list-style:none;
+        background-color:lightgray;
+        border: dotted gray;
+    }
+</style>
+<br />
+<div id="UserProfiles" class="row"></div>
+<div class="row">
+    <div class="cols-sm-1 col-sm-offset-11">
+        <a href="@Url.Action("PDF", "Home")">
+            <img src="~/Images/pdf_icon.png" height="31" /></a>
+    </div>
+</div>
+<div id="OfferWrapper" class="sortable">
+</div>
+@section scripts{
+    <script>
+        @{
+          var url = User.IsInRole("Administrator") ? "/Images/avatarCyn.jpg" : Url.Content(Model.UserBase.Photo.ImageUrl);
+          var Name = User.IsInRole("Administrator") ? "Administrateur" : Model.UserBase.FirstName + " " + Model.UserBase.LastName;
+          }
+        var usersWrapper = document.getElementById('UserProfiles');
+        new UserProfile({
+            wrapper: usersWrapper,
+            ImageSource: '@url',
+            CssClass: 'col-xs-8 col-sm-6 col-md-12',
+            UserName: '@Name',
+            Town: 'Tunisie',
+            UserProfession: 'Développeur .NET',
+            Societe: 'Cynapsys',
+            SocieteURL: 'http://www.cynapsys.de',
+            Skills: { '.NET': 'default', 'Html5': 'info', 'CSS3': 'info', 'JQuery': 'success' },
+            color: 'default'
+        });
+
+        $(document).ready(function () {
+            GetGroups();
+            $('.sortable').sortable({
+                placeholder: "ui-state-highlight"
+            });
+        });
+        $(".sortable").on("sortupdate", function (event, ui) {
+            $(".sortable").sortable("disable");
+            var ids = [];
+            $('.offer-group').each(function (index, value) {
+                var id = $(value).prop('id');
+                ids.push(id);
+            });
+            console.log(ids);
+            $.post(
+                '/AdminJson/UpdateGroupOrder',
+                { Ids: JSON.stringify(ids) },
+                function (response) {
+                    $(".sortable").sortable("enable");
+                }
+            );
+        });
+        $(".sortable").on("sortstart", function (event, ui) {
+            $('#' + ui.item.attr('id') + ' .iconSort').show();
+        });
+        $(".sortable").on("sortstop", function (event, ui) {
+            $('#' + ui.item.attr('id') + ' .iconSort').hide();
+        });
+        function GetGroups() {
+            $("#OfferWrapper").html('');
+            $.ajax({
+                url: '@Url.Action("GetGroups", "AdminJson")',
+                    dataType: "json"
+                }).done(function (data) {
+                    $.each(data, function (index, item) {
+                        $("#OfferWrapper").append(GroupOffer(item, data.length));
+                    });
+
+                });
+        }
+
+        function GroupOffer(item,max) {
+            var icon = "sort";
+            if (item.GroupOrder == 1)
+                icon = "arrow-down";
+            if (item.GroupOrder == max)
+                icon = "arrow-up";
+
+            return '<div class=" offer-group offer offer-' + item.GroupColor + '" id="' + item.GroupOrder + '">'
+            + '<div class="ribbon">'
+            + '<a href="#">' + item.GroupName + '</a>'
+            + '</div>'
+            + '<div class="offer-content">'
+            + ' <h3 class="lead">'
+            + '<span class="iconSort glyphicon glyphicon-' + icon + '" style="display:none;font-size:xx-large"></span> '
+            + item.GroupName
+            + '</h3>'
+            + '</div>'
+            + '</div>';
+        }
+    </script>
+}
+

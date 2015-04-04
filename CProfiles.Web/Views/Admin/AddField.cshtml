@@ -1,0 +1,251 @@
+﻿@{
+    ViewBag.Title = "AddField";
+}
+
+<blockquote class="lead blockquote-reverse">
+    Nouveau Champs
+</blockquote>
+
+<div class=" offer offer-default">
+    <div class="offer-content row">
+
+        <form class="form-horizontal col-sm-offset-1 col-sm-10" data-toggle="validator" id="fieldForm">
+            <div class="form-group">
+                <label for="GroupName" class="control-label">Groupe</label>
+                <select class="form-control" id="GroupID" name="GroupID" required></select>
+                <span class="help-block with-errors"></span>
+            </div>
+            <div class="form-group">
+                <label for="InfoName" class="control-label">Nom du champs</label>
+                <input type="text" class="form-control" id="InfoName" name="InfoName" required placeholder="Entrer le nom du champs" />
+                <span class="help-block with-errors"></span>
+            </div>
+            <div class="form-group">
+                <label for="DataType" class="control-label">Type de donnée</label>
+                <select class="form-control" id="DataType" name="DataType" required>
+                    <option value='' disabled selected style='display: none;'>Sélectionner un type</option>
+                    <option value="1">Text</option>
+                    <option value="2">Nombre entier</option>
+                    <option value="3">Nombre decimal</option>
+                    <option value="4">Nombre réel</option>
+                    <option value="5">Date</option>
+                    <option value="6">Liste</option>
+                </select>
+                <span class="help-block with-errors"></span>
+            </div>
+            <div id="Constraints">
+            </div>
+            <div class=" row">
+                <div class="form-group col-sm-3">
+                    <span class="button-checkbox">
+                        <button type="button" class="btn" data-color="info">Champs multiple</button>
+                        <input type="checkbox" id="HaveMany" class="hidden" name="HaveMany" />
+                    </span>
+                </div>
+                <div class="form-group col-sm-3">
+                    <span class="button-checkbox">
+                        <button type="button" class="btn" data-color="info">Champs requis</button>
+                        <input type="checkbox" id="Required" class="hidden" name="Required" />
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" id="FieldSubmit" data-loading-text="Traitement..." class="btn btn-primary">
+                    Confirmer
+                </button>
+            </div>
+            <div id="msgWrapper"></div>
+        </form>
+        <div id="notfound" class="col-sm-offset-1"></div>
+
+    </div>
+</div>
+@section scripts{
+    <script>
+        var min = '@int.MinValue';
+        var max = '@int.MaxValue';
+        $(document).ready(function () {
+            GetGroups();
+        });
+        var Alert;
+        function GetGroups() {
+            IndChargement.show('Chargement', { dialogSize: 'lg', progressType: 'info' });
+            $("#GroupList").html('');
+            $.ajax({
+                url: '@Url.Action("GetGroups", "AdminJson")',
+                dataType: "json"
+            }).done(function (data) {
+                $("#GroupID").append("<option value='' disabled selected style='display:none;'>Sélectionner un Groupe</option>");
+                $.each(data, function (index, item) {
+                    $("#GroupID").append('<option value=' + item.ID + '>' + item.GroupName + '</option>');
+                });
+                if (data.length < 1) {
+                    $("#fieldForm").hide();
+                    Alert = new AlertBak({
+                        wrapper: notfound,
+                        color: 'warning',
+                        message: "Aucun Groupe n'a été trouvé, veuillez <a href='/Admin/AddGroup'>ajouter</a>  un avant de commencer.",
+                        title: '',
+                        icon: 'exclamation-sign'
+                    });
+                }
+                IndChargement.hide();
+            });
+        }
+        $('#fieldForm').validator({}).on('submit', function (e) {
+            if (e.isDefaultPrevented()) {
+            } else {
+                var $btn = $(FieldSubmit).button('loading');
+                e.preventDefault();
+                if (Alert != null) {
+                    Alert.dismiss();
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("AddField", "AdminJson")',
+                    dataType: 'json',
+                    data: $('#fieldForm').serialize(),
+                }).done(function (data) {
+                    setTimeout(function () {
+                        $btn.button('reset');
+                        var msgWrapper = document.getElementById('msgWrapper');
+                        msgWrapper.innerHTML = '';
+                        if (data == 'OK') {
+                            Alert = new AlertBak({
+                                wrapper: msgWrapper,
+                                color: 'success',
+                                message: ' - votre champs a été bien ajouté',
+                                title: 'Success'
+                            });
+                        }
+                        else {
+                            Alert = new AlertBak({
+                                wrapper: msgWrapper,
+                                color: 'danger',
+                                message: " - une erreur est survenue lors de l'ajout",
+                                title: 'Erreur',
+                                ttl: 10000
+                            });
+                        }
+                    }, 1000);
+                    //$('#fieldForm').trigger("reset");
+                });
+            }
+        });
+        $('#DataType').change(function () {
+            var selectedText = $('#DataType option:selected').text();
+            $('#Constraints').html('');
+            var selected = $(this).val()
+            if (selected == 1) {
+                    AddTextChoices();
+            }
+            else if (selected == 3 || selected == 4) {
+                AddRange('#Constraints');
+            } else if (selected == 2) {
+                AddIntChoices();
+            }
+            else if (selected == 6) {
+                AddListe();
+            }
+        });
+        function AddRange(selector) {
+            $(selector).append('<div id="Range" class="row"></div>');
+            var range = document.getElementById('Range');
+            new NumberSpinner({
+                wrapper: range,
+                color: 'default',
+                min: 2,
+                max: max,
+                size: 4,
+                name: 'maxValue',
+                label: 'Valeur Maximale',
+                valeur: 9,
+                CssClass: 'col-sm-offset-1',
+            });
+            new NumberSpinner({
+                wrapper: range,
+                color: 'default',
+                min: min,
+                max: 98,
+                size: 4,
+                name: 'minValue',
+                label: 'Valeur Minimale',
+                valeur: 1,
+                CssClass: '',
+            });
+            NumberSpinnerInit(1);
+
+            $("#maxValue").change(function () {
+                var minVal = parseInt($("#minValue").val());
+                var maxVal = parseInt($(this).val());
+                $(this).attr('min', minVal + 1);
+                $("#minValue").attr('max', maxVal - 1);
+
+            });
+            $("#minValue").change(function () {
+                var minVal = parseInt($(this).val());
+                var maxVal = parseInt($("#maxValue").val());
+                $(this).attr('max', maxVal - 1);
+                $("#maxValue").attr('min', minVal + 1);
+            });
+        }
+        function AddNumber(selector) {
+            $(selector).append('<div id="NumSpinner" class="row"></div>');
+            var NumSpinner = document.getElementById('NumSpinner');
+            new NumberSpinner({
+                wrapper: NumSpinner,
+                color: 'default',
+                min: 1,
+                max: 10,
+                size: 4,
+                name: 'Echelle',
+                label: 'Echelle d&#39evaluation',
+                valeur: 5,
+                CssClass: '',
+            });
+            NumberSpinnerInit(1);
+        }
+        function AddTextChoices() {
+            $('#Constraints').append('<div class="form-group"><label for="TextType" class="control-label">Type du Text</label>'
+                   + '<select class="form-control" id="TextType" name="TextType" required>'
+                   + '<option value="" disabled selected style="display: none;">Sélectionner le type de text</option>'
+                   + '<option value="1">Libre</option>'
+                   + '<option value="2">Email</option>'
+                   + '<option value="3">URL</option>'
+                   + '<option value="4">Téléphone</option>'
+                   + '</select>'
+                   + '<span class="help-block with-errors"></span></div>');
+        }
+        function AddIntChoices() {
+            $('#Constraints').append('<div class="form-group"><label for="IntType" class="control-label">Type d&#39;entier</label>'
+                   + '<select class="form-control" id="IntType" name="IntType" required>'
+                   + '<option value="" disabled selected style="display: none;">Sélectionner le type d&#39;entier</option>'
+                   + '<option value="1">Nombre</option>'
+                   + '<option value="2">Evaluation</option>'
+                   + '</select>'
+                   + '<span class="help-block with-errors"></span></div>'
+                   + '<div id="ConstraintsInt"></div>');
+            $('#IntType').change(function () {
+                $('#ConstraintsInt').html('');
+                var selected = $(this).val()
+                if (selected == 1) {
+                    AddRange('#ConstraintsInt');
+                }
+                else if (selected == 2) {
+                    AddNumber('#ConstraintsInt');
+                }
+            });
+
+        }
+        function AddListe() {
+
+            $('#Constraints').append('<div class="form-group"><label for="Defaults" class="control-label">Valeur de la liste</label>'
+                + '<textarea name="Defaults" cols="40" rows="5"   class="form-control" style="resize: vertical; "></textarea>'
+                   + '<span class="help-block with-errors"></span></div>');
+        }
+
+    </script>
+}
+
+

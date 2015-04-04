@@ -1,0 +1,155 @@
+﻿@{
+    ViewBag.Title = "AddGroup";
+}
+<style>
+    .ui-state-highlight {
+        height: 3.5em;
+        list-style: none;
+        background-color: lightgray;
+        border: dotted gray;
+    }
+</style>
+<blockquote class="lead blockquote-reverse">
+    Nouveau Group
+</blockquote>
+<div class=" offer offer-default">
+    <div class="offer-content row">
+
+
+        <div class=" col-md-9 ">
+            <div class="form-group">
+                <label for="GroupName">Nom du Groupe</label>
+                <input type="text" class="form-control" id="GroupName" name="GroupName" placeholder="Entrer le nom du Groupe" />
+            </div>
+            <div class="form-group">
+                <label for="GroupColor">Couleur du Groupe</label>
+                <select class="form-control" id="GroupColor" name="GroupColor" style="background-color: rgb(160, 209, 96);">
+                    <option value="default">Couleur Default</option>
+                    <option value="danger">Couleur Danger</option>
+                    <option value="success">Couleur Success</option>
+                    <option value="warning">Couleur Warning</option>
+                    <option value="info">Couleur Info</option>
+                </select>
+            </div>
+            <input type="button" value="Confirmer" class="btn btn-default" id="GroupSubmit" />
+        </div>
+
+
+        <div class="col-md-3 ">
+            <div class="offer-content">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Liste des Groupes</h3>
+                    </div>
+                    <ul class="list-group sortable" id="GroupList">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            GetGroups();
+            $('.sortable').sortable({
+                placeholder: "ui-state-highlight"
+            });
+        });
+        $(".sortable").on("sortupdate", function (event, ui) {
+            $(".sortable").sortable("disable");
+            var ids = [];
+            $('.list-group-item').each(function (index, value) {
+                var id = $(value).prop('id');
+                ids.push(id);
+            });
+            $.post(
+                '/AdminJson/UpdateGroupOrder',
+                { Ids: JSON.stringify(ids) },
+                function (response) {
+                    $(".sortable").sortable("enable");
+                    GetGroups();
+                }
+            );
+        });
+        $(".sortable").on("sortstart", function (event, ui) {
+            $('#' + ui.item.attr('id') + ' .iconSort').show();
+        });
+        $(".sortable").on("sortstop", function (event, ui) {
+            $('#' + ui.item.attr('id') + ' .iconSort').hide();
+        });
+
+        function GetGroups() {
+            $("#GroupList .list-group-item").remove();
+            $.ajax({
+                url: '@Url.Action("GetGroups", "AdminJson")',
+                dataType: "json"
+            }).done(function (data) {
+                $.each(data, function (index, item) {
+                    $("#GroupList").append(GroupList(index, item, data.length));
+                    $('#loading').hide();
+                });
+                $('[id^=detail-]').hide();
+                $('.toggle').click(function () {
+                    $input = $(this);
+                    $target = $('#' + $input.attr('data-toggle'));
+                    $target.slideToggle();
+                });
+
+            });
+            }
+            $('#GroupColor').change(function () {
+                var color = "";
+                switch ($(this).val()) {
+
+                    case 'default': { color = '#a0d160'; break; }
+                    case 'danger': { color = '#d9534f'; break; }
+                    case 'success': { color = '#5cb85c'; break; }
+                    case 'warning': { color = '#f0ad4e'; break; }
+                    case 'info': { color = '#5bc0de'; break; }
+                }
+                $(this).css('background-color', color);
+
+            });
+            $('#GroupSubmit').click(function () {
+                var groupToAdd = $('#GroupName').val();
+                var colortoadd = $('#GroupColor').val();
+                if (groupToAdd != null && groupToAdd != "") {
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("AddGroup", "AdminJson")' + '?GroupName=' + groupToAdd + '&GroupColor=' + colortoadd,
+                        dataType: 'json',
+
+                    }).done(function (data) {
+                        GetGroups();
+                    });;
+                }
+            });
+
+            function GroupList(i, item, max) {
+                var icon = "sort";
+                if (item.GroupOrder == 1)
+                    icon = "arrow-down";
+                if (item.GroupOrder == max)
+                    icon = "arrow-up";
+                var fields = item.CustomFields;
+                var res = '<li id="' + item.GroupOrder + '" class="list-group-item item-sortable list-group-item-' + item.GroupColor + '">'
+                    + '<div class="row toggle" id="dropdown-detail-' + i + '" data-toggle="detail-' + i + '"><div class="col-md-9">'
+                    + '<span class="iconSort glyphicon glyphicon-' + icon + '" style="display:none;font-size:large;color:gray;postion:relative;left:-40px"></span> '
+                    + item.GroupName
+                    + ' </div><div class="col-md-2"><span class="glyphicon glyphicon-chevron-down"></span></div>'
+                    + ' </div><div id="detail-' + i + '">  <hr /> <ol>';
+
+                $.each(fields, function (index, item) {
+
+                    res += '<li><strong>' + item.InfoName + '</strong></li>';
+                });
+
+                res += '</ol> </div></li>';
+                return res;
+
+            }
+    </script>
+
+}
+

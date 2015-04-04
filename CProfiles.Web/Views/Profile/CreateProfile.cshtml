@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "CreateProfile";
+}
+<div class=" offer offer-default">
+    <div class="offer-content row" id="wizardWrapper">
+    </div>
+</div>
+<button id="show">show</button>
+
+
+@section scripts{
+    <script src="~/Scripts/Wizard.js"></script>
+    <script>
+        $(document).ready(function () {
+            var wrapper = document.getElementById('wizardWrapper');
+            IndChargement.show('Chargement', { dialogSize: 'lg', progressType: 'info' });
+            $.ajax({
+                url: '@Url.Action("GetGroups", "AdminJson")',
+                dataType: "json"
+            }).done(function (data) {
+                if (data.length < 1) {
+                    Alert = new AlertBak({
+                        wrapper: wrapper,
+                        color: 'warning',
+                        message: "Profiler doit être configurer avant de pouvoir l'utiliser , veuillez consulter votre administrateur",
+                        title: '',
+                        icon: 'exclamation-sign'
+                    });
+                }
+                else {
+                    new Wizard({
+                        wrapper: wrapper,
+                        color: '',
+                        data: data
+                    });
+                    initializeWizard();
+                }
+
+            });
+            IndChargement.hide();
+        });
+        $('#show').click(function () {
+            console.log($('#fieldForm').serializeArray());
+        });
+    </script>
+}

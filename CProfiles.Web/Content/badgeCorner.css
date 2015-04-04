@@ -1,0 +1,122 @@
+﻿.ribbon {
+    background-color: #a00;
+    overflow: hidden;
+    white-space: nowrap;
+    float: right;
+    /* top right corner */
+    position: relative;
+    right: -65px;
+    top: 40px;
+    /* 45 deg ccw rotation */
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    /* shadow */
+    -webkit-box-shadow: 0 0 10px #888;
+    -moz-box-shadow: 0 0 10px #888;
+    box-shadow: 0 0 10px #888;
+}
+
+    .ribbon a {
+        border: 1px solid #fff;
+        color: #fff;
+        display: block;
+        font: bold 81.25% 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        margin: 1px 0;
+        padding: 10px 50px;
+        text-align: center;
+        min-width: 220px;
+        text-decoration: none;
+        /* shadow */
+        text-shadow: 0 0 5px #444;
+    }
+
+
+
+
+
+
+
+.offer {
+    background: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    margin: 15px 0;
+    overflow: hidden;
+}
+
+.offer-hover:hover {
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    -o-transform: scale(1.1);
+    transform: scale(1.1);
+    -webkit-transition: all 0.4s ease-in-out;
+    -moz-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;
+}
+
+.offer-radius {
+    border-radius: 7px;
+}
+
+.offer-danger {
+    border-color: #d9534f;
+}
+
+    .offer-danger .ribbon {
+        background-color: #d9534f;
+    }
+
+.offer-success {
+    border-color: #5cb85c;
+}
+
+    .offer-success .ribbon {
+        background-color: #5cb85c;
+    }
+
+.offer-default {
+    border-color: #a0d160;
+}
+
+    .offer-default .ribbon {
+        background-color: #a0d160;
+    }
+
+.offer-primary {
+    border-color: #8ac233;
+}
+
+    .offer-primary .ribbon {
+        background-color: #8ac233;
+    }
+
+.offer-info {
+    border-color: #5bc0de;
+}
+
+    .offer-info .ribbon {
+        background-color: #5bc0de;
+    }
+
+.offer-warning {
+    border-color: #f0ad4e;
+}
+
+    .offer-warning .ribbon {
+        background-color: #f0ad4e;
+    }
+
+
+.offer-content {
+    padding: 25px;
+}
+
+    .offer-content p :first-child{
+        margin-top: 45px;
+        text-align: justify;
+    }

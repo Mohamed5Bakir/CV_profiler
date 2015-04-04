@@ -1,0 +1,52 @@
+﻿@using Microsoft.AspNet.Identity
+<li class="dropdown ">
+    @if (Request.IsAuthenticated)
+    {
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            @User.Identity.GetUserName()
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            <li class="dropdown-header">Paramètres</li>
+            <li class="divider"></li>
+            @if (!User.IsInRole("Administrator"))
+            {
+      
+                <li class=""><a href="@Url.Action("EditInfo", "Account")">Mettre à jour mes infos</a></li>
+            }
+            <li class=""><a href="@Url.Action("Manage", "Account")">Modifier Mot de passe</a></li>
+
+            <li class="divider"></li>
+            <li>
+                @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                {
+
+                    @Html.AntiForgeryToken()
+                    <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+
+                }
+            </li>
+        </ul>
+
+    }
+    else
+    {
+        <ul class="nav navbar-nav navbar-right">
+            <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+            <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+        </ul>
+    }
+</li>
+@*<li class="dropdown ">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            Account
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            <li class="dropdown-header">Paramètres</li>
+            <li class="divider"></li>
+            <li class=""><a href="#">Mon Compte</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Deconnexion</a></li>
+        </ul>
+    </li>*@

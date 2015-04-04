@@ -1,0 +1,22 @@
+﻿<div class="row">
+    <div class="col-sm-12">
+        <div id="stars" class="starrr"></div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script src="~/Scripts/StarRating.js"></script>
+    <script>
+        $(document).ready(function () {
+
+
+            $(".starrr").starrr();
+
+            $('#stars').on('starrr:change', function (e, value) {
+                console.log(value)
+            });
+
+        });
+    </script>
+}
