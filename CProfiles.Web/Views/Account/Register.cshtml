@@ -38,33 +38,32 @@
         </div>
     </div>
     <div class="form-group">
-
-        @Html.Label("Date de Naissance", new { @class = "col-md-2 control-label" })
+        @Html.LabelFor(m => m.DateNaissance, new { @class = "col-md-2 control-label" })
         <div class="col-md-3">
             <div class="input-group date">
-                <input type="text" class="form-control">
+                @Html.TextBoxFor(m => m.DateNaissance, new { @class = "form-control" })
                 <span class="input-group-addon input-group-addon-info"><i class="glyphicon glyphicon-inverse glyphicon-calendar"></i></span>
             </div>
         </div>
-        @Html.Label("Pays", new { @class = "col-md-1 control-label" })
+        @Html.LabelFor(m => m.Pays, new { @class = "col-md-1 control-label" })
         <div class="col-md-3">
-            <input id="country_selector" type="text" class="form-control country-info" spellcheck="false">
+            @Html.TextBoxFor(m => m.Pays, new { @class = "form-control country-info", spellcheck = "false" }) 
         </div>
-        @Html.Label("Sexe", new { @class = "col-md-1 control-label" })
+        @Html.LabelFor(m => m.Sexe, new { @class = "col-md-1 control-label" })
         <div class="col-md-2">
             <div class="btn-group " data-toggle="buttons">
                 <label class="btn btn-info col-md-6" id="hommeLabel">
-                    <input type="radio" name="Sexe" id="sexeHomme" autocomplete="off">
+                    <input type="radio" name="SexeInput" id="sexeHomme" autocomplete="off">
                     Homme
                 </label>
                 <label class="btn btn-info col-md-6" id="femmeLabel">
-                    <input type="radio" name="Sexe" id="sexeFemme" autocomplete="off">
+                    <input type="radio" name="SexeInput" id="sexeFemme" autocomplete="off">
                     Fremme
                 </label>
             </div>
         </div>
     </div>
-    
+    @Html.HiddenFor(m=>m.Sexe)
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" class="btn btn-default" value="Confirmer" />
@@ -89,7 +88,7 @@
                         $('#hommeLabel').addClass('active');
                         $('#sexeFemme').removeAttr('checked', false);
                         $('#femmeLabel').removeClass('active');
-
+                        $('#Sexe').val('Homme');
                     }
                     else if (gender == 'female') {
 
@@ -97,11 +96,14 @@
                         $('#femmeLabel').addClass('active');
                         $('#sexeHomme').removeAttr('checked', false);
                         $('#hommeLabel').removeClass('active');
+                        $('#Sexe').val('Femme');
                     }
                 });
             }
         });
-        $("#country_selector").countrySelect({
+        $('#sexeHomme').click(function () { $('#Sexe').val('Homme'); });
+        $('#sexeFemme').click(function () { $('#Sexe').val('Femme'); });
+        $("#Pays").countrySelect({
             defaultCountry: "tn",
             //onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
             preferredCountries: ['tn']

@@ -1104,8 +1104,8 @@
     background-color: white;
     border: 1px solid #ccc;
     width: 430px;
-    max-height: 200px;
-    overflow-y: scroll;
+    max-height: 200px; 
+    overflow-y:scroll;
 }
 
     .country-select .country-list .flag {

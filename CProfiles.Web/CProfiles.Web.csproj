@@ -188,6 +188,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Age.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CustomFieldServices.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -204,12 +205,14 @@
     <Content Include="Content\countrySelect.css" />
     <Content Include="Content\Cyn-bootstrap.css" />
     <Content Include="Content\fileinput.css" />
+    <Content Include="Content\font-awesome.css" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\jquery-ui.structure.css" />
     <Content Include="Content\PageIntro.css" />
     <Content Include="Content\slidebars.css" />
     <Content Include="Content\UserProfile.css" />
     <Content Include="favicon-32x32.png" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -236,6 +239,11 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="App_Browsers\qt.browser" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\FontAwesome.otf" />
     <None Include="Properties\PublishProfiles\12.pubxml" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\countrySelect.js" />

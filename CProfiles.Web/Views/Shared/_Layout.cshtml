@@ -33,7 +33,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-               @* <a class="navbar-brand img" href="@Url.Action("Index", "Home")"><img src=" ~/Images/logo-text.png" height="34" /></a>*@
+                @* <a class="navbar-brand img" href="@Url.Action("Index", "Home")"><img src=" ~/Images/logo-text.png" height="34" /></a>*@
                 <a class="navbar-brand" href="@Url.Action("Index", "Home")"> PROFILER </a>
                 @* @Html.ActionLink("Application name", "Index", "Home", null, new { @class = "navbar-brand" })*@
             </div>
@@ -56,13 +56,13 @@
 
 
     <div id="sb-site">
-        <div class="container">
+        <div class="container" id="bodyContainer">
             @RenderBody()
-            <hr />
-            <footer>
-                <p>&copy; @DateTime.Now.Year -Profiler- Made by Mohamed Elhames Bakir</p>
-            </footer>
+
         </div>
+        <footer class="footer">
+            <p>&copy; @DateTime.Now.Year -Profiler- Made by Mohamed Elhames Bakir </p>
+        </footer>
     </div>
     @if (User.IsInRole("Administrator"))
     {

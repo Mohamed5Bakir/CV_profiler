@@ -1,4 +1,14 @@
-﻿
+﻿footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 35px;
+  background-color: #ebebeb; 
+  border-top:1px solid #adadad;
+  padding:5px;
+  text-align:center
+}
 .navbar a.navbar-brand.img {
     padding: 9px 15px 8px;
 }
@@ -6,6 +16,7 @@
 .navbar a.navbar-brand {
     font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
+
 .navicon-line {
     width: 24px;
     height: 4px;
@@ -41,9 +52,9 @@
         background-color: #a1cf23;
     }
 
-body {
-    margin-top: 70px;
-    padding-bottom: 20px;
+#bodyContainer {
+    padding-top: 70px;
+    padding-bottom: 60px;
 }
 
 /* styles for validation helpers */

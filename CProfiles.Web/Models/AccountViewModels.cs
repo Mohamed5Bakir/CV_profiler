@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Web;
 
 namespace CProfiles.Web.Models
@@ -14,8 +15,18 @@ namespace CProfiles.Web.Models
         [Display(Name = "Nom")]
         public string LastName { get; set; }
 
-        [Display(Name = "Promen")]
+        [Display(Name = "Prénom")]
         public string FirstName { get; set; }
+
+        [Display(Name = "Pays")]
+        public string Pays { get; set; }
+
+        [Display(Name = "Sexe")]
+        public string Sexe { get; set; }
+
+        [Display(Name = "Date de naissance")]
+        [DataType(DataType.Date)]
+        public DateTime DateNaissance { get; set; } 
 
         [Display(Name = "Photo")]
         public string ImageUrl { get; set; }
@@ -64,9 +75,20 @@ namespace CProfiles.Web.Models
         [Required]
         [Display(Name = "Prénom ")]
         public string FirstName { get; set; }
+
         [Required]
         [Display(Name = "Nom")]
         public string LastName { get; set; }
+
+        [Display(Name = "Pays")]
+        public string Pays { get; set; }
+
+        [Display(Name = "Sexe")]
+        public string Sexe { get; set; }
+
+        [Display(Name = "Date de naissance")]
+        [DataType(DataType.Date)]
+        public DateTime DateNaissance { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]

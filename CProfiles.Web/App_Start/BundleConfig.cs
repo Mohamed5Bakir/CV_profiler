@@ -29,12 +29,13 @@ namespace CProfiles.Web
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/Cyn-bootstrap.css",
+                      "~/Content/font-awesome.css",
                       "~/Content/jquery-ui.css",
                       "~/Content/jquery-ui.structure.css",
                       "~/Content/bootstrap-datepicker3.css",
                       "~/Content/site.css",
                        "~/Content/badgeCorner.css",
-                       "~/Content/slidebars.css")); 
+                       "~/Content/slidebars.css"));
 
             bundles.Add(new StyleBundle("~/Content/UserProfile").Include(
                       "~/Content/UserProfile.css"));

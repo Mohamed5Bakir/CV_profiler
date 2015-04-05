@@ -5,41 +5,55 @@
 <style>
     .ui-state-highlight {
         height: 10em;
-        list-style:none;
-        background-color:lightgray;
+        list-style: none;
+        background-color: lightgray;
         border: dotted gray;
     }
 </style>
 <br />
 <div id="UserProfiles" class="row"></div>
-<div class="row">
+<div class="row visible-md visible-lg">
     <div class="cols-sm-1 col-sm-offset-11">
         <a href="@Url.Action("PDF", "Home")">
-            <img src="~/Images/pdf_icon.png" height="31" /></a>
+            <img src="~/Images/pdf_icon.png" height="31" />
+        </a>
     </div>
 </div>
 <div id="OfferWrapper" class="sortable">
 </div>
 @section scripts{
     <script>
-        @{
-          var url = User.IsInRole("Administrator") ? "/Images/avatarCyn.jpg" : Url.Content(Model.UserBase.Photo.ImageUrl);
-          var Name = User.IsInRole("Administrator") ? "Administrateur" : Model.UserBase.FirstName + " " + Model.UserBase.LastName;
-          }
+        @if (!User.IsInRole("Administrator")) {
+            <text>
+
+
         var usersWrapper = document.getElementById('UserProfiles');
+        var icon = "mars";
+        if ('@Model.UserBase.Sexe' == 'Femme') var icon = "venus";
         new UserProfile({
             wrapper: usersWrapper,
-            ImageSource: '@url',
+            ImageSource: '@Url.Content(Model.UserBase.Photo.ImageUrl)',
             CssClass: 'col-xs-8 col-sm-6 col-md-12',
-            UserName: '@Name',
-            Town: 'Tunisie',
-            UserProfession: 'Développeur .NET',
-            Societe: 'Cynapsys',
-            SocieteURL: 'http://www.cynapsys.de',
-            Skills: { '.NET': 'default', 'Html5': 'info', 'CSS3': 'info', 'JQuery': 'success' },
+            UserName: '@Model.UserBase.FirstName' +' '+ '@Model.UserBase.LastName',
+            ch1: '<i class="fa fa-' + icon + '"></i>',
+            ch2: '@Html.Age(Model.UserBase.DateNaissance) ans',
+            ch3: 'de @Model.UserBase.Pays',
+            urlCh3: '#',
+            list: { '.NET': 'default', 'Html5': 'info', 'CSS3': 'info', 'JQuery': 'success' },
             color: 'default'
         });
-
+        $('#ch3').popover({
+            html: true,
+            trigger: 'hover',
+            container: '#bodyContainer',
+            title: '@Model.UserBase.Pays',
+            placement: 'bottom',
+            content: function () {
+                return '<img src="http://maps.googleapis.com/maps/api/staticmap?center=@Model.UserBase.Pays&size=248x248" />';
+            },
+        });
+        </text>
+    }
         $(document).ready(function () {
             GetGroups();
             $('.sortable').sortable({
@@ -72,16 +86,16 @@
             $("#OfferWrapper").html('');
             $.ajax({
                 url: '@Url.Action("GetGroups", "AdminJson")',
-                    dataType: "json"
-                }).done(function (data) {
-                    $.each(data, function (index, item) {
-                        $("#OfferWrapper").append(GroupOffer(item, data.length));
-                    });
-
+                dataType: "json"
+            }).done(function (data) {
+                $.each(data, function (index, item) {
+                    $("#OfferWrapper").append(GroupOffer(item, data.length));
                 });
+
+            });
         }
 
-        function GroupOffer(item,max) {
+        function GroupOffer(item, max) {
             var icon = "sort";
             if (item.GroupOrder == 1)
                 icon = "arrow-down";

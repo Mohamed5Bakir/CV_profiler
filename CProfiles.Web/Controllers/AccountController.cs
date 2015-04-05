@@ -80,12 +80,15 @@ namespace CProfiles.Web.Controllers
                 {
                     FirstName = model.FirstName,
                     LastName = model.LastName,
+                    DateNaissance=model.DateNaissance,
+                    Pays=model.Pays,
+                    Sexe=model.Sexe,
                     Photo = new Image()
                     {
                         Title = model.UserName,
                         ImageUrl = @"~/Images/avatarCyn.jpg"
                     }
-                };
+                }; 
                 var user = new ApplicationUser() { UserName = model.UserName, UserBase = info };
 
                 var result = await UserManager.CreateAsync(user, model.Password);
@@ -285,7 +288,8 @@ namespace CProfiles.Web.Controllers
                         UserName = loginInfo.DefaultUserName,
                         ImageUrl = @"https://graph.facebook.com/" + loginInfo.ExternalIdentity.GetUserId() + "/picture?type=large",
                         FirstName = loginInfo.ExternalIdentity.Claims.First(c => c.Type == "urn:facebook:first_name").Value,
-                        LastName = loginInfo.ExternalIdentity.Claims.First(c => c.Type == "urn:facebook:last_name").Value
+                        LastName = loginInfo.ExternalIdentity.Claims.First(c => c.Type == "urn:facebook:last_name").Value,
+                        Sexe = loginInfo.ExternalIdentity.Claims.First(c => c.Type == "urn:facebook:gender").Value=="male"?"Homme":"Femme",
                     });
                 }
                 else if (loginInfo.Login.LoginProvider.ToLower() == "linkedin")
@@ -295,7 +299,8 @@ namespace CProfiles.Web.Controllers
                         UserName = loginInfo.DefaultUserName,
                         ImageUrl = loginInfo.ExternalIdentity.Claims.First(c => c.Type == "urn:linkedin:pictureUrl").Value,
                         FirstName = loginInfo.ExternalIdentity.Claims.First(c => c.Type == "urn:linkedin:firstName").Value,
-                        LastName = loginInfo.ExternalIdentity.Claims.First(c => c.Type == "urn:linkedin:lastName").Value
+                        LastName = loginInfo.ExternalIdentity.Claims.First(c => c.Type == "urn:linkedin:lastName").Value,
+                        Sexe=""
                     });
                 }
                 return View();
@@ -350,6 +355,9 @@ namespace CProfiles.Web.Controllers
                 {
                     FirstName = model.FirstName,
                     LastName = model.LastName,
+                    DateNaissance = model.DateNaissance,
+                    Pays = model.Pays,
+                    Sexe = model.Sexe,
                     Photo = new Image()
                     {
                         Title = model.UserName,

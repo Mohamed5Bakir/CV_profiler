@@ -54,18 +54,19 @@
         ImageSource: '/Images/avatarCyn.jpg',
         //the User Name
         UserName: 'User Profile',
-        //the user Town
-        Town: 'Tunisie',
-        //the user profession
-        UserProfession: 'Développeur',
-        //societe
-        Societe: 'Cynapsys',
-        //societe Url
-        SocieteURL: 'http://www.cynapsys.de',
+        //the user ch1
+        ch1: 'Tunisie',
+        ch1Class:"",
+        //the user ch2
+        ch2: 'Développeur',
+        //ch3
+        ch3: 'Cynapsys',
+        //ch3 Url
+        urlCh3: 'http://www.cynapsys.de',
         //list of skills 
-        //skills must be at format {'skill1':'style1','skill2':'style2',....} 
+        //list must be at format {'el1':'style1','el2':'style2',....} 
         //where styles are 'default','success','info','danger','warning','primary'
-        Skills: { 'Html5': 'default', 'CSS3': 'info' },
+        list: { 'Html5': 'default', 'CSS3': 'info' },
         CssClass: '',
 
     }
@@ -116,14 +117,16 @@
         strinner += '</a>';
 
         strinner += '<div class="media-body">';
-        strinner += '<h4 class="media-heading">' + this.options.UserName + ' <small class="text-' + this.options.color + '">' + this.options.Town + '</small></h4>'
-        strinner += '<h5>' + this.options.UserProfession + ' à <a href="' + this.options.SocieteURL + '" target="_blank">' + this.options.Societe + '</a></h5>'
+        strinner += '<h4 class="media-heading">' + this.options.UserName
+            +' '+ this.options.ch1 
+            +'</h4>'
+        strinner += '<h5>' + this.options.ch2 + '  <a href="' + this.options.urlCh3 + '"   id="ch3">' + this.options.ch3 + '</a></h5>'
         strinner += '<hr style="margin:8px auto" class="dp-' + this.options.color + '">'
 
-        var skills = this.options.Skills;
-        for (var skill in skills) {
-            if (skills.hasOwnProperty(skill)) {
-                strinner += '<span style="margin-right:2px" class="label label-' + skills[skill] + '">' + skill + '</span>';
+        var list = this.options.list;
+        for (var el in list) {
+            if (list.hasOwnProperty(el)) {
+                strinner += '<span style="margin-right:2px" class="label label-' + list[el] + '">' + el + '</span>';
             }
         }
 
