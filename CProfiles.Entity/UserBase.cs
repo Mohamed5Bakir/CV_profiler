@@ -12,7 +12,7 @@ namespace CProfiles.Entity
         public string Pays { get; set; }
         public string Sexe { get; set; }
         [DataType(DataType.Date)]
-        public DateTime DateNaissance { get; set; } 
+        public DateTime? DateNaissance { get; set; } 
         public virtual Image Photo { get; set; }
         public virtual ICollection<CustomFieldValue> CustomFieldValues { get; set; }
     }

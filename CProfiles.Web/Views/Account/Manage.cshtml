@@ -1,9 +1,9 @@
-﻿@using CProfiles.Web.Models;
+﻿@model CProfiles.Web.Models.ExternalLoginViewModel
+@using CProfiles.Web.Models;
 @using Microsoft.AspNet.Identity;
 @{
     ViewBag.Title = "Mon Compte";
 }
-
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div class="row">
@@ -16,10 +16,9 @@
         {
             @Html.Partial("_SetPasswordPartial")
         }
-
         <section id="externalLogins">
             @Html.Action("RemoveAccountList")
-          @*@Html.Partial("_ExternalLoginsListPartial", new { Action = "LinkLogin", ReturnUrl = ViewBag.ReturnUrl })*@
+            @Html.Partial("_ExternalLoginsListPartial", new { Action = "LinkLogin", ReturnUrl = ViewBag.ReturnUrl })
         </section>
     </div>
 </div>

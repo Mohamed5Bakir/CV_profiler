@@ -12,6 +12,7 @@ using CProfiles.Web.Models;
 using CProfiles.Entity;
 using System.IO;
 using System.Data.Entity;
+using Newtonsoft.Json;
 
 namespace CProfiles.Web.Controllers
 {
@@ -65,7 +66,8 @@ namespace CProfiles.Web.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            RegisterViewModel model = new RegisterViewModel { PhotoUrl = "~/Images/avatarCyn.jpg", DateNaissance = null };
+            return View(model);
         }
         //
         // POST: /Account/Register
@@ -74,21 +76,39 @@ namespace CProfiles.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
+            Image photo = new Image();
+            var validImageTypes = new string[] { 
+                "image/gif",
+                "image/jpeg",
+                "image/pjpeg",
+                "image/png"
+            };
+
+            if (model.ImageUpload != null && !validImageTypes.Contains(model.ImageUpload.ContentType))
+            {
+                ModelState.AddModelError("ImageUpload", "Veuillez choisir une image.");
+            }
             if (ModelState.IsValid)
             {
+                if (model.ImageUpload != null && model.ImageUpload.ContentLength > 0)
+                {
+                    var uploadDir = @"~/Uploads/";
+                    var name = DateTime.Now.Day + DateTime.Now.Month + DateTime.Now.Year + "-" + User.Identity.GetUserId() + '-' + model.ImageUpload.FileName;
+                    var imagePath = Path.Combine(Server.MapPath(uploadDir), name);
+                    var imageUrl = Path.Combine(uploadDir, name);
+                    model.ImageUpload.SaveAs(imagePath);
+                    photo.ImageUrl = imageUrl;
+                }
+                photo.Title = model.UserName;
                 UserBase info = new UserBase()
                 {
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    DateNaissance=model.DateNaissance,
-                    Pays=model.Pays,
-                    Sexe=model.Sexe,
-                    Photo = new Image()
-                    {
-                        Title = model.UserName,
-                        ImageUrl = @"~/Images/avatarCyn.jpg"
-                    }
-                }; 
+                    DateNaissance = model.DateNaissance,
+                    Pays = model.Pays,
+                    Sexe = model.Sexe,
+                    Photo = photo
+                };
                 var user = new ApplicationUser() { UserName = model.UserName, UserBase = info };
 
                 var result = await UserManager.CreateAsync(user, model.Password);
@@ -289,7 +309,7 @@ namespace CProfiles.Web.Controllers
                         ImageUrl = @"https://graph.facebook.com/" + loginInfo.ExternalIdentity.GetUserId() + "/picture?type=large",
                         FirstName = loginInfo.ExternalIdentity.Claims.First(c => c.Type == "urn:facebook:first_name").Value,
                         LastName = loginInfo.ExternalIdentity.Claims.First(c => c.Type == "urn:facebook:last_name").Value,
-                        Sexe = loginInfo.ExternalIdentity.Claims.First(c => c.Type == "urn:facebook:gender").Value=="male"?"Homme":"Femme",
+                        Sexe = loginInfo.ExternalIdentity.Claims.First(c => c.Type == "urn:facebook:gender").Value == "male" ? "Homme" : "Femme",
                     });
                 }
                 else if (loginInfo.Login.LoginProvider.ToLower() == "linkedin")
@@ -300,8 +320,20 @@ namespace CProfiles.Web.Controllers
                         ImageUrl = loginInfo.ExternalIdentity.Claims.First(c => c.Type == "urn:linkedin:pictureUrl").Value,
                         FirstName = loginInfo.ExternalIdentity.Claims.First(c => c.Type == "urn:linkedin:firstName").Value,
                         LastName = loginInfo.ExternalIdentity.Claims.First(c => c.Type == "urn:linkedin:lastName").Value,
-                        Sexe=""
+                        Sexe = ""
                     });
+                }
+                else if (loginInfo.Login.LoginProvider.ToLower() == "google")
+                {
+                    dynamic imageUrl = JsonConvert.DeserializeObject(loginInfo.ExternalIdentity.Claims.First(c => c.Type == "urn:google:image").Value);
+                    dynamic Name = JsonConvert.DeserializeObject(loginInfo.ExternalIdentity.Claims.First(c => c.Type == "urn:google:name").Value);
+                    ExternalLoginConfirmationViewModel model = new ExternalLoginConfirmationViewModel();
+                    model.UserName = loginInfo.DefaultUserName;
+                    model.ImageUrl = imageUrl.url;
+                    model.FirstName = Name.givenName;
+                    model.LastName = Name.familyName;
+                    model.Sexe = loginInfo.ExternalIdentity.Claims.First(c => c.Type == "urn:google:gender").Value == "male" ? "Homme" : "Femme";
+                    return View("ExternalLoginConfirmation", model);
                 }
                 return View();
             }

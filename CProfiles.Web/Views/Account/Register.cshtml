@@ -4,75 +4,99 @@
 }
 
 <link href="~/Content/countrySelect.css" rel="stylesheet" />
-@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+<link href="~/Content/fileinput.css" rel="stylesheet" />
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     <h4>Créer un nouveau compte.</h4>
     <hr />
     @Html.ValidationSummary()
-    <div class="form-group">
-        @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-        <div class="col-md-4">
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-        </div>
-        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
-        <div class="col-md-4">
-            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
-        </div>
-    </div>
-    
-    <div class="form-group">
-        @Html.LabelFor(m => m.LastName, new { @class = "col-md-2 control-label" })
-        <div class="col-md-4">
-            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
-        </div>
-        @Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 control-label" })
-        <div class="col-md-4">
-            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.DateNaissance, new { @class = "col-md-2 control-label" })
-        <div class="col-md-3">
-            <div class="input-group date">
-                @Html.TextBoxFor(m => m.DateNaissance, new { @class = "form-control" })
-                <span class="input-group-addon input-group-addon-info"><i class="glyphicon glyphicon-inverse glyphicon-calendar"></i></span>
-            </div>
-        </div>
-        @Html.LabelFor(m => m.Pays, new { @class = "col-md-1 control-label" })
-        <div class="col-md-3">
-            @Html.TextBoxFor(m => m.Pays, new { @class = "form-control country-info", spellcheck = "false" }) 
-        </div>
-        @Html.LabelFor(m => m.Sexe, new { @class = "col-md-1 control-label" })
-        <div class="col-md-2">
-            <div class="btn-group " data-toggle="buttons">
-                <label class="btn btn-info col-md-6" id="hommeLabel">
-                    <input type="radio" name="SexeInput" id="sexeHomme" autocomplete="off">
-                    Homme
-                </label>
-                <label class="btn btn-info col-md-6" id="femmeLabel">
-                    <input type="radio" name="SexeInput" id="sexeFemme" autocomplete="off">
-                    Fremme
-                </label>
+    <div class="col-md-2">
+        <div class=" form-group">
+            <div class="col-md-2">
+                <label  for="Photo">Photo</label>
+                <div class="fileinput fileinput-new" data-provides="fileinput">
+                    <div class="fileinput-new thumbnail" style="width: 150px; height: 150px;">
+                        <img src="@Url.Content(Model.PhotoUrl)" alt="..." width="150" height="150">
+                    </div>
+                    <div class="fileinput-preview fileinput-exists thumbnail" style="width: 160px; height: 150px;"></div>
+                    <div>
+                        <span class="btn btn-default btn-file">
+                            <span class="fileinput-new">Selectionner Image</span>
+                            <span class="fileinput-exists">Changer</span>
+                            @Html.EditorFor(m => m.ImageUpload, new { @class = "form-control" })
+                        </span>
+                        <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Annuler</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    @Html.HiddenFor(m=>m.Sexe)
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Confirmer" />
+    <div class="col-md-10">
+        <div class="form-group">
+            @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+            <div class="col-md-4">
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+            </div>
+            @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+            <div class="col-md-4">
+                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.LastName, new { @class = "col-md-2 control-label" })
+            <div class="col-md-4">
+                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+            </div>
+            @Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 control-label" })
+            <div class="col-md-4">
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.DateNaissance, new { @class = "col-md-2 control-label" })
+            <div class="col-md-3">
+                <div class="input-group date">
+                    @Html.TextBoxFor(m => m.DateNaissance, new { @class = "form-control" })
+                    <span class="input-group-addon input-group-addon-info"><i class="glyphicon glyphicon-inverse glyphicon-calendar"></i></span>
+                </div>
+            </div>
+            @Html.LabelFor(m => m.Pays, new { @class = "col-md-1 control-label" })
+            <div class="col-md-3">
+                @Html.TextBoxFor(m => m.Pays, new { @class = "form-control country-info", spellcheck = "false" })
+            </div>
+            @Html.LabelFor(m => m.Sexe, new { @class = "col-md-1 control-label" })
+            <div class="col-md-2">
+                <div class="btn-group " data-toggle="buttons">
+                    <label class="btn btn-info col-md-6" id="hommeLabel">
+                        <input type="radio" name="SexeInput" id="sexeHomme" autocomplete="off">
+                        Homme
+                    </label>
+                    <label class="btn btn-info col-md-6" id="femmeLabel">
+                        <input type="radio" name="SexeInput" id="sexeFemme" autocomplete="off">
+                        Fremme
+                    </label>
+                </div>
+            </div>
+        </div>
+        @Html.HiddenFor(m => m.Sexe)
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-default" value="Confirmer" />
+            </div>
         </div>
     </div>
 }
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/fileinput.js"></script>
     <script src="~/Scripts/countrySelect.js"></script>
     <script>
         $('#FirstName').keyup(function () {

@@ -36,7 +36,7 @@
             CssClass: 'col-xs-8 col-sm-6 col-md-12',
             UserName: '@Model.UserBase.FirstName' +' '+ '@Model.UserBase.LastName',
             ch1: '<i class="fa fa-' + icon + '"></i>',
-            ch2: '@Html.Age(Model.UserBase.DateNaissance) ans',
+            ch2: '@Html.Age(Model.UserBase.DateNaissance.Value) ans',
             ch3: 'de @Model.UserBase.Pays',
             urlCh3: '#',
             list: { '.NET': 'default', 'Html5': 'info', 'CSS3': 'info', 'JQuery': 'success' },

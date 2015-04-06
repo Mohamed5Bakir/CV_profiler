@@ -26,7 +26,7 @@ namespace CProfiles.Web.Models
 
         [Display(Name = "Date de naissance")]
         [DataType(DataType.Date)]
-        public DateTime DateNaissance { get; set; } 
+        public DateTime? DateNaissance { get; set; }
 
         [Display(Name = "Photo")]
         public string ImageUrl { get; set; }
@@ -88,7 +88,16 @@ namespace CProfiles.Web.Models
 
         [Display(Name = "Date de naissance")]
         [DataType(DataType.Date)]
-        public DateTime DateNaissance { get; set; }
+        public DateTime? DateNaissance { get; set; }
+
+
+        [DataType(DataType.Upload)]
+        [Display(Name = "Photo")]
+        public HttpPostedFileBase ImageUpload { get; set; }
+
+
+        [Display(Name = "Preview Photo")]
+        public string PhotoUrl { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
@@ -102,6 +111,7 @@ namespace CProfiles.Web.Models
         public string ConfirmPassword { get; set; }
 
     }
+
     public class EditInfoModel
     {
         [Required]
@@ -115,5 +125,10 @@ namespace CProfiles.Web.Models
 
         [Display(Name = "Preview Photo")]
         public string PhotoUrl { get; set; }
-    } 
+    }
+    public class ExternalLoginViewModel
+    {
+        public string Action { get; set; }
+        public string ReturnUrl { get; set; }
+    }
 }

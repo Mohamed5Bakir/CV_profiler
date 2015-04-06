@@ -4,6 +4,8 @@ using Microsoft.Owin.Security.Cookies;
 using Owin.Security.Providers.LinkedIn;
 using Owin;
 using Microsoft.Owin.Security.Facebook;
+using Microsoft.Owin.Security.Google;
+using System.Security.Claims;
 
 namespace CProfiles.Web
 {
@@ -52,7 +54,33 @@ namespace CProfiles.Web
             facebook.SignInAsAuthenticationType = DefaultAuthenticationTypes.ExternalCookie;
             app.UseFacebookAuthentication(facebook);
 
-            //app.UseGoogleAuthentication();
+
+
+            var googlePlusOptions = new GoogleOAuth2AuthenticationOptions
+            {
+                ClientId = "158077854351-477nr7dcbfhf7h3mdb0lrmdbdk3h92of.apps.googleusercontent.com",
+                ClientSecret = "KVEiZakJErf9-LuUwkGTZzMy",
+                SignInAsAuthenticationType = DefaultAuthenticationTypes.ExternalCookie,
+                Provider = new GoogleOAuth2AuthenticationProvider()
+                {
+                    OnAuthenticated = async googleContext =>
+                    {
+                        googleContext.Identity.AddClaim(new Claim("urn:tokens:googleplus:accesstoken", googleContext.AccessToken));
+                        foreach (var claim in googleContext.User)
+                        {
+                            var claimType = string.Format("urn:google:{0}", claim.Key);
+                            string claimValue = claim.Value.ToString();
+                            if (!googleContext.Identity.HasClaim(claimType, claimValue))
+                                googleContext.Identity.AddClaim(new System.Security.Claims.Claim(claimType, claimValue, "XmlSchemaString", "Google"));
+
+                        }
+                    }
+
+                },
+            };
+
+            app.UseGoogleAuthentication(googlePlusOptions);
+
 
 
 
