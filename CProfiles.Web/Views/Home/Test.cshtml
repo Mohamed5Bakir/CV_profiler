@@ -1,22 +1,129 @@
-﻿<div class="row">
-    <div class="col-sm-12">
-        <div id="stars" class="starrr"></div>
+﻿<div class="row ">
+
+    <div class="col-md-2">
+        <div class="panel-group" id="accordionRight" role="tablist" aria-multiselectable="true">
+
+            <div class="panel panel-info">
+                <div class="panel-heading" role="tab" id="headingContainer">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordionRight" href="#collapseContainer" aria-expanded="false" aria-controls="collapseContainer">
+                            Conteneur
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseContainer" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingContainer">
+                    <div class="panel-body">
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="panel panel-info">
+                <div class="panel-heading" role="tab" id="headingElements">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordionRight" href="#collapseElements" aria-expanded="true" aria-controls="collapseElements">
+                            Contrôles
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseElements" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingElements">
+                    <div class="panel-body" id="elements">
+                        <ul class="fa-ul">
+                            <li><i class="fa-li fa fa-font"></i>Text</li>
+                            <li><i class="fa-li fa fa-calculator"></i>Nombre</li>
+                            <li><i class="fa-li fa fa-calendar"></i>Date</li>
+                            <li><i class="fa-li fa fa-list"></i>Liste</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
     </div>
+
+
+    <div class="col-md-8">
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">Nom du formulaire</div>
+            <div class="panel-body">
+                <section style="padding:0 10px">
+                    <div id="formContainer" style="min-height:3em;" class="row"></div>
+                </section>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="col-md-2">
+
+        <div class="panel-group" id="accordionLeft" role="tablist" aria-multiselectable="true">
+
+            <div class="panel panel-info">
+                <div class="panel-heading" role="tab" id="headingProprietes">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordionLeft" href="#collapseProprietes" aria-expanded="false" aria-controls="collapseProprietes">
+                            Propriétés
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseProprietes" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingProprietes">
+                    <div class="panel-body">
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 </div>
 
-
 @section scripts{
-    <script src="~/Scripts/StarRating.js"></script>
     <script>
-        $(document).ready(function () {
-
-
-            $(".starrr").starrr();
-
-            $('#stars').on('starrr:change', function (e, value) {
-                console.log(value)
-            });
-
+        $("#elements li").draggable({
+            appendTo: "body",
+            helper: "clone"
         });
+        $("#formContainer").droppable({
+            activeClass: "ui-state-default",
+            hoverClass: "ui-state-hover",
+            accept: ":not(.ui-sortable-helper)",
+            drop: function (event, ui) {
+                var type = ui.draggable.text();
+                if (type == 'Text')
+                    $(addInput()).appendTo(this);
+                if (type == 'Nombre') {
+                    $('<div id="wrapperNum"></div>').appendTo(this);
+                    var warpper = document.getElementById('wrapperNum');
+                    new NumberSpinner({
+                        wrapper: warpper,
+                        color: 'default',
+                        min:1,
+                        max: 10,
+                        size:12,
+                        name: 'Numerique',
+                        label: 'Champs Numerique',  
+                    });
+                    NumberSpinnerInit(1);
+                }
+            }
+        }).sortable({
+            items: ".form-group",
+            sort: function () {
+                // gets added unintentionally by droppable interacting with sortable
+                // using connectWithSortable fixes this, but doesn't allow you to customize active/hoverClass options
+                $(this).removeClass("ui-state-default");
+            }
+        });
+        function addInput() {
+            return '<div class="form-group">'
+              + '<label class="control-label">Nom du champs</label>'
+              + '<input type="text" class="form-control" />'
+              + '</div>';
+        }
     </script>
 }
