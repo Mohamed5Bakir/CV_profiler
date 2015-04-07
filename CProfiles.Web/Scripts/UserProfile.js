@@ -101,7 +101,7 @@
         valeur: 1,
         CssClass: '',
         aria: {},
-        required: '',
+        required: '', 
 
     }
     /**
@@ -153,10 +153,10 @@
     NumberSpinner.prototype._init = function () {
         // create HTML structure
         this.spn = document.createElement('div');
-        this.spn.className = 'col-sm-' + this.options.size+' ' + this.options.CssClass;;
+        this.spn.className ='form-group'+ this.options.CssClass; 
         var arias = this.options.aria;
       
-        var strinner = '<div class="form-group "><label for="' + this.options.name + '" class="control-label">' + this.options.label + '</label>'
+        var strinner = '<label for="' + this.options.name + '" class="control-label" >' + this.options.label + '</label>'
         + '<div class="input-group number-spinner ">'
         + '<span class="input-group-btn data-dwn">'
         + '<button type="button" class="btn btn-' + this.options.color + '" data-dir="dwn"><span class="glyphicon glyphicon-minus"></span></button>'
@@ -174,7 +174,7 @@
         + '<button type="button" class="btn btn-' + this.options.color + '" data-dir="up"><span class="glyphicon glyphicon-plus"></span></button>'
         + '</span>'
         + '</div>'
-        + '<span class="help-block with-errors"></span></div>'
+        + '<span class="help-block with-errors"></span>'
         this.spn.innerHTML = strinner;
 
         // append to body or the element specified in options.wrapper

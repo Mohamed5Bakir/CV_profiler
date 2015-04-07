@@ -6,14 +6,12 @@
             <div class="panel panel-info">
                 <div class="panel-heading" role="tab" id="headingContainer">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordionRight" href="#collapseContainer" aria-expanded="false" aria-controls="collapseContainer">
-                            Conteneur
+                        <a data-toggle="collapse" data-parent="#accordionRight" href="#collapseContainer" aria-expanded="false" aria-controls="collapseContainer">Conteneur
                         </a>
                     </h4>
                 </div>
                 <div id="collapseContainer" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingContainer">
                     <div class="panel-body">
-
                     </div>
                 </div>
             </div>
@@ -22,8 +20,7 @@
             <div class="panel panel-info">
                 <div class="panel-heading" role="tab" id="headingElements">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordionRight" href="#collapseElements" aria-expanded="true" aria-controls="collapseElements">
-                            Contrôles
+                        <a data-toggle="collapse" data-parent="#accordionRight" href="#collapseElements" aria-expanded="true" aria-controls="collapseElements">Contrôles de base
                         </a>
                     </h4>
                 </div>
@@ -39,6 +36,24 @@
                 </div>
             </div>
 
+
+
+            <div class="panel panel-info">
+                <div class="panel-heading" role="tab" id="headingElementsPers">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordionRight" href="#collapseElementsPers" aria-expanded="true" aria-controls="collapseElementsPers">Contrôles Personalisés
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseElementsPers" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingElementsPers">
+                    <div class="panel-body" id="elementsPers">
+                        <ul class="fa-ul">
+                            <li><i class="fa-li fa fa-user"></i>Nom complet</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </div>
@@ -49,8 +64,13 @@
         <div class="panel panel-primary">
             <div class="panel-heading">Nom du formulaire</div>
             <div class="panel-body">
-                <section style="padding:0 10px">
-                    <div id="formContainer" style="min-height:3em;" class="row"></div>
+                <section style="padding: 0 10px">
+                    <form>
+                        <div id="formContainer" style="min-height: 3em;" class="row"></div>
+                        <button data-loading-text="Traitement..." class="btn btn-xs btn-info pull-right">
+                            Confirmer
+                        </button>
+                    </form>
                 </section>
             </div>
         </div>
@@ -65,13 +85,20 @@
             <div class="panel panel-info">
                 <div class="panel-heading" role="tab" id="headingProprietes">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordionLeft" href="#collapseProprietes" aria-expanded="false" aria-controls="collapseProprietes">
-                            Propriétés
+                        <a data-toggle="collapse" data-parent="#accordionLeft" href="#collapseProprietes" aria-expanded="true" aria-controls="collapseProprietes">Propriétés
                         </a>
                     </h4>
                 </div>
-                <div id="collapseProprietes" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingProprietes">
-                    <div class="panel-body">
+                <div id="collapseProprietes" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingProprietes">
+                    <div class="panel-body" style="padding: 5px">
+                        <form style="display: none" id="propForm">
+                            <div id="Properties"></div>
+                            <div class="form-group" style="margin-bottom: 0em">
+                                <button id="PropSubmit" data-loading-text="Traitement..." class="btn btn-xs btn-info pull-right">
+                                    Confirmer
+                                </button>
+                            </div>
+                        </form>
 
                     </div>
                 </div>
@@ -84,31 +111,80 @@
 
 @section scripts{
     <script>
-        $("#elements li").draggable({
-            appendTo: "body",
-            helper: "clone"
+        var iNum = 1; var iText = 1; var iFullName = 1; var currentPropId = ""
+        $("#elements li,#elementsPers li").draggable({
+            revert: 'invalid',
+            revertDuration: 500,
+            appendTo: 'body',
+
+            helper: function (event, ui) {
+                return $(this).clone().appendTo('body').css('zIndex', 5).show();
+            },
+            drag: function (event, ui) {
+                /* $(ui.helper).removeClass("enlarge");
+                   $(ui.helper).addClass("thumbnail");  */
+                $(ui.helper).css('list-style', 'none');
+                $(ui.helper).css('color', 'Green');
+            },
+        });
+        function Edit(element) {
+            $('#propForm').show();
+            if ($(element).attr('class') == 'TextInput') {
+                $('#Properties').html(addInputProp(element));
+            }
+            currentPropId = $(element).attr('id');
+        }
+        $("#propForm").on("submit", function (event) {
+            event.preventDefault();
+            var props = $(this).serializeArray();
+            var jsonProps = JSON.stringify(props);
+            console.log(jsonProps);
+            var label = ""; var required = false; var maxlength = "";
+            $(props).each(function (i, e) {
+
+                if (e.name == 'Label') {
+                    label = e.value;
+                }
+                if (e.name == 'Requis') {
+                    required = e.value == "on";
+                }
+                if (e.name == 'MaxLength') {
+                    maxlength = e.value;
+                }
+            });
+            $('#' + currentPropId).find('label').text(label);
+            $('#' + currentPropId).find('input').attr('maxlength', maxlength);
+            $('#' + currentPropId).find('input').attr('required', required);
         });
         $("#formContainer").droppable({
             activeClass: "ui-state-default",
             hoverClass: "ui-state-hover",
             accept: ":not(.ui-sortable-helper)",
             drop: function (event, ui) {
+
                 var type = ui.draggable.text();
-                if (type == 'Text')
+                if (type == 'Nom complet') {
+                    $(addFullName()).appendTo(this);
+                    iFullName++;
+                }
+                if (type == 'Text') {
                     $(addInput()).appendTo(this);
+                    iText++;
+                }
                 if (type == 'Nombre') {
-                    $('<div id="wrapperNum"></div>').appendTo(this);
-                    var warpper = document.getElementById('wrapperNum');
+                    $('<div class="NumInput col-sm-12" id="wrapperNum' + iNum + '" onclick="Edit(this)"></div>').appendTo(this);
+                    var warpper = document.getElementById('wrapperNum' + iNum);
                     new NumberSpinner({
                         wrapper: warpper,
                         color: 'default',
-                        min:1,
+                        min: 1,
                         max: 10,
-                        size:12,
-                        name: 'Numerique',
-                        label: 'Champs Numerique',  
+                        size: 12,
+                        name: 'Numerique' + iNum,
+                        label: 'Champs Numerique ' + iNum, 
                     });
                     NumberSpinnerInit(1);
+                    iNum++;
                 }
             }
         }).sortable({
@@ -120,9 +196,46 @@
             }
         });
         function addInput() {
+            return '<div class="TextInput" id="ChampInput' + iText + '" onclick="Edit(this)">'
+              + '<div class="form-group">'
+              + '<div class="col-sm-12">'
+              + '<label class="control-label" id="Text' + iText + '">Champs Texte ' + iText + '</label>'
+              + '<input type="text" class="form-control" id="TextInput' + iText + '" maxlength="20" />'
+              + '</div></div></div>';
+        }
+        function addInputProp(element) {
+            checked = "";
+            var label = $(element).find('label').text();
+            var maxlength = $(element).find('input').attr('maxlength');
+            var req = $(element).find('input').prop('required');
+            if (req) checked = "checked";
             return '<div class="form-group">'
-              + '<label class="control-label">Nom du champs</label>'
-              + '<input type="text" class="form-control" />'
+              + '<label class="control-label">Label</label>'
+              + '<input type="text" class="form-control" value="' + label + '" name="Label" />'
+              + '</div>'
+              + '<div class="form-group">'
+              + '<label class="control-label">Longueur Max</label>'
+              + '<input type="number" class="form-control" value="' + maxlength + '" name="MaxLength"/>'
+              + '</div>'
+              + '<div class="checkbox">'
+              + '<label>'
+              + '<input type="checkbox" name="Requis" ' + checked + '> Champs requis'
+              + '</label>'
+              + '</div>'
+
+        }
+        function addFullName() {
+            return '<div class="TextInput" id="ChampFullName' + iFullName + '" onclick="Edit(this)">'
+              + '<div class="form-group">'
+              + '<div class="col-sm-6">'
+              + '<label class="control-label" id="TextFullNameNom' + iFullName + '">Nom</label>'
+              + '<input type="text" class="form-control" id="FullNameNom' + iFullName + '" maxlength="20" />'
+              + '</div>'
+              + '<div class="col-sm-6">'
+              + '<label class="control-label" id="TextFullNamePrenom' + iFullName + '">Prenom</label>'
+              + '<input type="text" class="form-control" id="FullNameNomPrenom' + iFullName + '" maxlength="20" />'
+              + '</div>'
+              + '</div>'
               + '</div>';
         }
     </script>
